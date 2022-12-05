@@ -3,7 +3,9 @@ const app = express();
 const userRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
 const postRoute = require("./routes/posts");
+const uploadRoute = require("./routes/upload");
 const PORT = 5000; // port 港の意味
+const path = require("path");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
@@ -15,10 +17,12 @@ mongoose.connect(process.env.MONGOURL).then(()=>{
 });
 
 // ミドルウェア
+app.use("/images", express.static(path.join(__dirname, "public/images"))); //__dirname現在地
 app.use(express.json());
 app.use("/api/users", userRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/posts", postRoute);
+app.use("/api/upload", uploadRoute);
 
 // コールバック（reqでクライアントから受け取り、resでバックエンドから返す） /はエンドポイント
 app.get("/", (req, res) => {
